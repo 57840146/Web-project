@@ -1,0 +1,36 @@
+body {
+    text-align: center;
+}
+.geeks {
+    font-size: 40px;
+    font-weight: bold;
+    color: green;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10em;
+}
+
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-duration: 0.4s;
+    background-color: white;
+    box-shadow: 0 9px #999;
+    color: black;
+    border: 2px solid green;
+    font-size: 50px;
+}
+.button:hover{
+    background-color: green;
+    color: white;
+}
+.button:active{
+    background-color: black;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
