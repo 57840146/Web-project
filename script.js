@@ -17,6 +17,8 @@ var foodX;
 var foodY;
  
 var gameOver = false;
+var score = 0;
+var bestScore = 0;
  
 window.onload = function () {
     // Set board height and width
@@ -33,6 +35,11 @@ window.onload = function () {
  
 function update() {
     if (gameOver) {
+        if (score >= bestScore){
+            bestScore = score;
+            score = 0;
+            updateBestScore();
+        }
         return;
     }
  
@@ -47,6 +54,8 @@ function update() {
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
         placeFood();
+        score++;
+        updateScore();
     }
  
     // body of snake will grow
@@ -113,6 +122,17 @@ function changeDirection(e) {
         speedX = 1;
         speedY = 0;
     }
+
+}
+
+function updateScore() {
+    var scoreElement = document.getElementById("score");
+    scoreElement.textContent = "Score: " + score;
+}
+
+function updateBestScore(){
+    var scoreElement = document.getElementById("bestScore");
+    scoreElement.textContent = "Best Score: "+ bestScore; 
 }
  
 // Randomly place food
