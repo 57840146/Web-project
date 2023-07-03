@@ -178,7 +178,11 @@ function update() {
             score = 0;
             updateBestScore();
         }
-        return;
+        let restart = window.confirm("Game over! Do you want to restart the game?");//back to starting page
+        if(restart){
+            history.back();
+        }
+        // return;
     }
  
     // Background of a Game
@@ -232,7 +236,7 @@ function update() {
              
             // Snake eats own body
             gameOver = true;
-            alert("Game Over");
+            // alert("Game Over");
         }
     }
 }
