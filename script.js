@@ -90,7 +90,7 @@ class GenericBody extends Body {
     }
   
     get level() {
-      return this.level;
+      return this._level;
     }
 
     setLevel(value){
