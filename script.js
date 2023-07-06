@@ -243,7 +243,7 @@ class MultiplierBody extends Body{
     }
 
     use(old){
-        score = score * 2
+        // score = score * 2
         speed = 75;
         clearInterval(old);
         speedInterval = setInterval(update, speed);
