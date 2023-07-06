@@ -24,6 +24,8 @@ var score = 0;
 var bestScore = 0;
 
 var x;
+
+var speedInterval = null;
 // class enemy{
 //     constructor(){
 
@@ -50,7 +52,6 @@ class Body {
       if (new.target === Body) {
         throw new TypeError("Cannot instantiate abstract class.");
       }
-    //   this.level = 1;
     }
 
     get color() {
@@ -65,9 +66,8 @@ class Body {
       throw new Error("Method 'use()' must be implemented.");
     }
   
-    upgrade() {
-      this.level++;
-      console.log(`Upgraded to level ${this.level}.`);
+    upgrade(){
+        throw new Error("Upgrade not implemented")
     }
 
     remove(){
@@ -78,6 +78,7 @@ class Body {
 class GenericBody extends Body {
     constructor() {
       super();
+      this._level = 1
     }
   
     get color() {
@@ -89,11 +90,20 @@ class GenericBody extends Body {
     }
   
     get level() {
-    //   return this.level;
+      return this.level;
+    }
+
+    setLevel(value){
+        this._level = value;
     }
   
     use(){
       return
+    }
+
+    upgrade() {
+        this.level++;
+        console.log(`Upgraded to level ${this.level}.`);
     }
 }
 
@@ -101,6 +111,7 @@ class ScoreBody extends Body{
     constructor(){
         super();
         this.scoreInterval = null;
+        this._level = 1;
     }
 
     get color(){
@@ -112,7 +123,11 @@ class ScoreBody extends Body{
     }
 
     get level(){
-        // return this.level;
+        return this._level;
+    }
+
+    setLevel(value){
+        this._level = value;
     }
 
     use(){
@@ -124,12 +139,16 @@ class ScoreBody extends Body{
     remove(){
         clearInterval(this.scoreInterval);
     }
+
+    upgrade() {
+        this.level++;
+        console.log(`Upgraded to level ${this.level}.`);
+    }
 }
 
 class MultiplierBody extends Body{
     constructor(){
         super();
-
     }
 
     get color(){
@@ -145,11 +164,11 @@ class MultiplierBody extends Body{
         return 1
     }
 
-    use(){
+    use(old){
         score = score * 2
         speed = 75;
-        clearInterval();
-        setInterval(update, speed);
+        clearInterval(old);
+        speedInterval = setInterval(update, speed);
     }
 
     upgrade(){
@@ -182,8 +201,12 @@ class ShieldBody extends Body{
     remove(){
         global.protected = false;
     }
+
+    upgrade(){
+        return
+    }
 }
- 
+
 window.onload = function () {
     // Set board height and width
     board = document.getElementById("board");
@@ -207,7 +230,7 @@ window.onload = function () {
     placeFood();
     document.addEventListener("keyup", changeDirection);  //for movements
     // Set snake speed
-    setInterval(update, speed);
+    speedInterval = setInterval(update, speed);
 }
  
 function update() {
@@ -243,7 +266,9 @@ function update() {
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
         snaketype.push(x);
-        x.use();
+        x.use(speedInterval);
+        x.upgrade();
+        console.log(x.level);
         placeFood();
         score++;
         // test.type;
