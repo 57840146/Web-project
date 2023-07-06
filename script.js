@@ -19,34 +19,105 @@ var food=[];
 var foodX;
 var foodY;
 
+var EnemyX;
+var EnemyY;
+
 var gameOver = false;
 var score = 0;
 var bestScore = 0;
-
+var shield = false;
 var x;
 
 var speedInterval = null;
-// class enemy{
-//     constructor(){
+class Enemy{
+    constructor(){
+        if (new.target === Enemy) {
+            throw new TypeError("Cannot instantiate abstract class.");
+        }
+    }
 
-//     }
+    get color(){
+        throw new Error("Property 'color' must be implemented.");
+    }
 
-//     get color(){
+    get type(){
+        throw new Error("Property 'type' must be implemented.");
+    }
 
-//     }
+    use(){
+        throw new Error("Upgrade not implemented")
+    }   
 
-//     get type(){
+    remove(){
+        return;
+    }
+}
 
-//     }
+class AreaEnemy extends Enemy{
+    constructor(){
+        super();
+    }
 
-//     use(){
+    get color(){
+        return "red";
+    }
 
-//     }
+    get type(){
+        return "Area";
+    }
 
-//     remove(){
+    use(){
 
-//     }
-// }
+    }
+
+    remove(){
+
+    }
+}
+
+class RowEnemy extends Enemy{
+    constructor(){
+        super();
+    }
+
+    get color(){
+        return "red"
+    }
+
+    get type(){
+        return "Row"
+    }
+
+    use(){
+
+    }
+
+    remove(){
+        
+    }
+}
+
+class ColumnEnemy extends Enemy{
+    constructor(){
+        super();
+    }
+
+    get color(){
+        return "red"
+    }
+
+    get type(){
+        return "Column"
+    }
+
+    use(){
+        
+    }
+
+    remove(){
+        
+    }
+}
 class Body {
     constructor() {
       if (new.target === Body) {
@@ -94,7 +165,7 @@ class GenericBody extends Body {
     }
 
     setLevel(value){
-        this._level = value;
+        // this._level = value;
     }
   
     use(){
@@ -102,8 +173,8 @@ class GenericBody extends Body {
     }
 
     upgrade() {
-        this.level++;
-        console.log(`Upgraded to level ${this.level}.`);
+        // this.level++;
+        // console.log(`Upgraded to level ${this.level}.`);
     }
 }
 
@@ -131,18 +202,25 @@ class ScoreBody extends Body{
     }
 
     use(){
-        const increment = Math.pow(10, this.level-1)
+        // const increment = Math.pow(10, this.level-1)
+        const increment = 10
         this.scoreInterval = setInterval(()=>{
-            global.score += increment;},1000);
+            score += increment;},1000);
+        console.log(score);
+        // setInterval(score++,speed);
     }
+
+    // test(){
+
+    // }
 
     remove(){
         clearInterval(this.scoreInterval);
     }
 
     upgrade() {
-        this.level++;
-        console.log(`Upgraded to level ${this.level}.`);
+        // this.level++;
+        // console.log(`Upgraded to level ${this.level}.`);
     }
 }
 
@@ -165,7 +243,7 @@ class MultiplierBody extends Body{
     }
 
     use(old){
-        score = score * 2
+        // score = score * 2
         speed = 75;
         clearInterval(old);
         speedInterval = setInterval(update, speed);
@@ -194,12 +272,12 @@ class ShieldBody extends Body{
     }
 
     use(){
-        global.protected = true;
+        shield = true;
         console.log("test");
     }
 
     remove(){
-        global.protected = false;
+        shield = false;
     }
 
     upgrade(){
@@ -227,6 +305,7 @@ window.onload = function () {
     let shield = new ShieldBody();
     food.push(shield);
 
+    
     placeFood();
     document.addEventListener("keyup", changeDirection);  //for movements
     // Set snake speed
@@ -262,19 +341,19 @@ function update() {
     //generate body
     context.fillStyle=x.color;
     context.fillRect(foodX, foodY, blockSize, blockSize);
-
+    // console.log(speed);
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
         snaketype.push(x);
         x.use(speedInterval);
         x.upgrade();
-        console.log(x.level);
+        // console.log(x.level);
         placeFood();
-        score++;
+        // score++;
         // test.type;
         // test.use;
-        updateScore();
     }
+    updateScore();
  
     // body of snake will grow
     for (let i = snakeBody.length - 1; i > 0; i--) {
@@ -357,8 +436,8 @@ function updateBestScore(){
  
 // Randomly place food
 function placeFood() {
-    // x=food[Math.floor(Math.random()*4)];// which body to generate
-    x=food[1];
+    x=food[Math.floor(Math.random()*4)];// which body to generate
+    // x=food[0];
     // console.log(x);
     // context.fillStyle=x;
     // in x coordinates.
