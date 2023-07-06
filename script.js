@@ -148,7 +148,7 @@ class MultiplierBody extends Body{
     use(){
         score = score * 2
         speed = 75;
-        clearInterval()
+        clearInterval();
         setInterval(update, speed);
     }
 
@@ -239,7 +239,7 @@ function update() {
     //generate body
     context.fillStyle=x.color;
     context.fillRect(foodX, foodY, blockSize, blockSize);
-
+    // console.log(speed);
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
         snaketype.push(x);
