@@ -14,7 +14,7 @@ var speed = 100;
  
 var snakeBody = [];
 var snaketype =[];
-var food=[];
+var food=['score','generic','multiplier','shield'];
  
 var foodX;
 var foodY;
@@ -207,21 +207,17 @@ class ScoreBody extends Body{
         // const increment = 10
         this.scoreInterval = setInterval(()=>{
             score += increment;},1000);
-        console.log(score);
         // setInterval(score++,speed);
     }
 
-    // test(){
-
-    // }
-
     remove(){
+        console.log("clearing score interval")
         clearInterval(this.scoreInterval);
     }
 
     upgrade() {
-        // this.level++;
-        // console.log(`Upgraded to level ${this.level}.`);
+        this._level++;
+        console.log(`Upgraded to level ${this.level}.`);
     }
 }
 
@@ -251,6 +247,7 @@ class MultiplierBody extends Body{
     }
 
     upgrade(){
+        console.log('cant upgrade')
         return
     }
 }
@@ -282,6 +279,7 @@ class ShieldBody extends Body{
     }
 
     upgrade(){
+        console.log('cant upgrade')
         return
     }
 }
@@ -294,19 +292,7 @@ window.onload = function () {
     context = board.getContext("2d");
 
     // context.fillStyle = "green";
-    // context.fillRect(0, 0, board.width, board.height);
-
-    //all functional body
-    let score = new ScoreBody();
-    food.push(score);
-    let multiplier = new MultiplierBody();
-    food.push(multiplier);
-    let generic = new GenericBody();
-    food.push(generic);
-    let shield = new ShieldBody();
-    food.push(shield);
-
-    
+    // context.fillRect(0, 0, board.width, board.height);   
     placeFood();
     document.addEventListener("keyup", changeDirection);  //for movements
     // Set snake speed
@@ -342,17 +328,12 @@ function update() {
     //generate body
     context.fillStyle=x.color;
     context.fillRect(foodX, foodY, blockSize, blockSize);
-    // console.log(speed);
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
         snaketype.push(x);
         x.use(speedInterval);
-        x.upgrade();
-        // console.log(x.level);
+        checkUpgrade();
         placeFood();
-        // score++;
-        // test.type;
-        // test.use;
     }
     // for(let i=snaketype.length; )
     updateScore();
@@ -372,7 +353,7 @@ function update() {
     context.fillRect(snakeX, snakeY, blockSize, blockSize);
 
     for (let i = 0; i < snakeBody.length; i++) {
-        // console.log(snaketype[i]);
+        
         context.fillStyle = snaketype[i].color;
         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
     }
@@ -438,11 +419,20 @@ function updateBestScore(){
  
 // Randomly place food
 function placeFood() {
-    x=food[Math.floor(Math.random()*4)];// which body to generate
-    // x=food[0];
-    // console.log(x);
-    // context.fillStyle=x;
-    // in x coordinates.
+    rand=food[Math.floor(Math.random()*2)];// which body to generate
+    if(rand === 'score'){
+       x = new ScoreBody();
+    }
+    else if(rand === "generic"){
+       x = new GenericBody();
+    }
+    else if (rand === "multiplier"){
+       x = new MultiplierBody();
+    }
+    else if (rand === 'shield'){
+       x = new ShieldBody();
+    }
+    //x = new ScoreBody();
     foodX = Math.floor(Math.random() * total_col) * blockSize;
     
     //in y coordinates.
@@ -450,3 +440,135 @@ function placeFood() {
     
     // context.fillRect(foodX, foodY, blockSize, blockSize);
 }
+
+function checkUpgrade(){
+    if (snaketype.length < 3){
+        return
+    }
+    first = snaketype[snaketype.length-3]
+    second = snaketype[snaketype.length-2]
+    last = snaketype[snaketype.length-1]
+    console.log(first.level)
+    console.log(second.level)
+    console.log(last.level)
+    console.log(first.type)
+    console.log(second.type)
+    console.log(last.type)
+    if(first.type === second.type && first.level === second.level && first.type !== 'generic' && second.type !== 'generic' && last.type !== 'generic'){
+        if(second.type === last.type && second.level === last.level){
+            first.upgrade();
+            second.remove();
+            last.remove();
+            snaketype.splice(snaketype.length-2,2)
+            snakeBody.splice(snakeBody.length-2,2)
+            checkUpgrade();
+        }
+        return
+    }
+    else if(first.type ==='generic' && second.type === 'generic' && first.level === second.level){
+        if(last.level === first.level){
+            last.upgrade();
+            first.remove();
+            second.remove();
+            snaketype.splice(snaketype.length-3,2)
+            snakeBody.splice(snakeBody.length-3,2)
+            checkUpgrade();
+        }
+        return
+    }
+    else if(first.type === 'generic' && last.type === 'generic' && first.level === last.level){
+        
+        if(second.level === first.level){
+            second.upgrade();
+            first.remove();
+            last.remove();
+            temp = snakeBody[snakeBody.length-2];
+            snaketype.splice(snaketype.length-3);
+            snakeBody.splice(snakeBody.length-3);
+            snaketype.push(second);
+            snakeBody.push(temp);
+            checkUpgrade();
+        }
+        return
+    }
+    else if(second.type === 'generic' && last.type === 'generic' && second.level === last.level){
+        if(first.level === second.level){
+            first.upgrade();
+            second.remove();
+            last.remove();
+            snaketype.splice(snaketype.length-2,2)
+            snakeBody.splice(snakeBody.length-2,2)
+            checkUpgrade();
+        }
+        return
+    }
+    else if(first.type === 'generic' && first.level === second.level){
+        if(second.type === last.type && second.level === last.level){
+            last.upgrade();
+            first.remove();
+            second.remove();
+            snaketype.splice(snaketype.length-3,2)
+            snakeBody.splice(snakeBody.length-3,2)
+            checkUpgrade();
+
+        }
+        return
+    }
+    else if(second.type === 'generic' && first.level === second.level){
+        if(first.type === last.type && first.level === last.level){
+            first.upgrade();
+            second.remove();
+            last.remove();
+            snaketype.splice(snaketype.length-2,2)
+            snakeBody.splice(snakeBody.length-2,2)
+            checkUpgrade();
+        }
+        return
+    }
+    else if(last.type === 'generic' && first.level === last.level){
+        if(first.type === second.type && first.level === second.level){
+            first.upgrade();
+            second.remove();
+            last.remove();
+            snaketype.splice(snaketype.length-2,2)
+            snakeBody.splice(snakeBody.length-2,2)
+            checkUpgrade();
+        }
+        return
+    }
+    return
+}
+
+// function checkUpgrade(){
+//     const newBody = [];
+//     const newBodyCoord = [];
+//     let count = 1;
+  
+//     for (let i = 1; i < snaketype.length; i++) {
+//       if ((snaketype[i].type === snaketype[i - 1].type || snaketype[i].type === 'generic' || snaketype[i-1] === 'generic') && (snaketype[i].level === snaketype[i-1].level)){
+//           count++;
+//       } 
+//       else {
+//         while (count >= 3) {
+//             console.log(snaketype[i-1])
+//             snaketype[i-1].upgrade();
+//             newBody.push(snaketype[i - 1]);
+//             newBodyCoord.push(snakeBody[i-1]);
+//             count -= 3;
+//         }
+//         count = 1;
+//       }
+//     }
+  
+//     while (count >= 3) {
+//         snaketype[snaketype.length-3].upgrade();
+//         newBody.push(snaketype[snaketype.length - 3]);
+//         newBodyCoord.push(snakeBody[snakeBody.length-3]);
+//         count -= 3;
+//     }
+//     if(newBody.length>0){
+//         snaketype = newBody;
+//         snakeBody = newBodyCoord;
+//     }
+//     return
+// }
