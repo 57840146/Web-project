@@ -26,7 +26,8 @@ var gameOver = false;
 var score = 0;
 var bestScore = 0;
 var shield = false;
-var x;
+var x;//food
+var increment = 10;
 
 var speedInterval = null;
 class Enemy{
@@ -44,13 +45,13 @@ class Enemy{
         throw new Error("Property 'type' must be implemented.");
     }
 
-    use(){
-        throw new Error("Upgrade not implemented")
-    }   
+    // use(){
+    //     throw new Error("Upgrade not implemented")
+    // }   
 
-    remove(){
-        return;
-    }
+    // remove(){
+    //     return;
+    // }
 }
 
 class AreaEnemy extends Enemy{
@@ -66,13 +67,13 @@ class AreaEnemy extends Enemy{
         return "Area";
     }
 
-    use(){
+    // use(){
 
-    }
+    // }
 
-    remove(){
+    // remove(){
 
-    }
+    // }
 }
 
 class RowEnemy extends Enemy{
@@ -88,13 +89,13 @@ class RowEnemy extends Enemy{
         return "Row"
     }
 
-    use(){
+    // use(){
 
-    }
+    // }
 
-    remove(){
+    // remove(){
         
-    }
+    // }
 }
 
 class ColumnEnemy extends Enemy{
@@ -110,13 +111,13 @@ class ColumnEnemy extends Enemy{
         return "Column"
     }
 
-    use(){
+    // use(){
         
-    }
+    // }
 
-    remove(){
+    // remove(){
         
-    }
+    // }
 }
 class Body {
     constructor() {
@@ -161,11 +162,11 @@ class GenericBody extends Body {
     }
   
     get level() {
-    //   return this.level;
+      return this._level;
     }
 
     setLevel(value){
-        // this._level = value;
+        this._level = value;
     }
   
     use(){
@@ -173,8 +174,8 @@ class GenericBody extends Body {
     }
 
     upgrade() {
-        // this.level++;
-        // console.log(`Upgraded to level ${this.level}.`);
+        this._level++;
+        console.log(`Upgraded to level ${this._level}.`);
     }
 }
 
@@ -203,7 +204,7 @@ class ScoreBody extends Body{
 
     use(){
         // const increment = Math.pow(10, this.level-1)
-        const increment = 10
+        // const increment = 10
         this.scoreInterval = setInterval(()=>{
             score += increment;},1000);
         console.log(score);
@@ -243,7 +244,7 @@ class MultiplierBody extends Body{
     }
 
     use(old){
-        // score = score * 2
+        increment *= 2;
         speed = 75;
         clearInterval(old);
         speedInterval = setInterval(update, speed);
@@ -353,6 +354,7 @@ function update() {
         // test.type;
         // test.use;
     }
+    // for(let i=snaketype.length; )
     updateScore();
  
     // body of snake will grow
