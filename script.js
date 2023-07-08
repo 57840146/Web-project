@@ -15,7 +15,8 @@ var speed = 100;
 var snakeBody = [];
 var snaketype =[];
 var food=['score','generic','multiplier','shield'];
-var enemy=['areaenemy','rowenemy','columnenemy']
+var enemy=['rowenemy','columnenemy','areaenemy'];
+// var enemybody=[];
  
 var foodX;
 var foodY;
@@ -48,8 +49,12 @@ class Enemy{
         throw new Error("Property 'type' must be implemented.");
     }
 
+    warning(){
+        throw new Error("Upgrade not implemented");
+    }
+
     use(){
-        throw new Error("Upgrade not implemented")
+        throw new Error("Upgrade not implemented");
     }   
 
     remove(){
@@ -63,7 +68,7 @@ class AreaEnemy extends Enemy{
     }
 
     get color(){
-        return "black"
+        return "red"
     }
 
     get type(){
@@ -85,16 +90,17 @@ class RowEnemy extends Enemy{
     }
 
     get color(){
-        return "black"
+        return "red"
     }
 
     get type(){
         return "Row"
     }
 
-    // use(){
-
-    // }
+    use(){
+        context.fillStyle=this.color;
+        context.fillRect(0, EnemyY, board.width,blockSize);
+    }
 
     // remove(){
         
@@ -107,15 +113,22 @@ class ColumnEnemy extends Enemy{
     }
 
     get color(){
-        return "black"
+        return "red"
     }
 
     get type(){
         return "Column"
     }
 
+    // warning(){
+    //     // context.fillStyle=this.color;
+    //     // context.font = "20px Comic Sans MS"
+    //     // context.fillText("!",EnemyX,0);
+    //     // context.fillRect(EnemyX,0,blockSize,blockSize);
+    // }
+
     use(){
-        context.fillStyle=y.color;
+        context.fillStyle=this.color;
         context.fillRect(EnemyX, 0, blockSize, board.height);
     }
 
@@ -191,7 +204,7 @@ class ScoreBody extends Body{
     }
 
     get color(){
-        return "red";
+        return "lightgreen";
     }
 
     get type(){
@@ -291,8 +304,8 @@ class ShieldBody extends Body{
 window.onload = function () {
     // Set board height and width
     board = document.getElementById("board");
-    board.height = total_row * blockSize;
-    board.width = total_col * blockSize;
+    board.height = (total_row) * blockSize;
+    board.width = (total_col) * blockSize;
     context = board.getContext("2d");
 
     // context.fillStyle = "green";
@@ -302,10 +315,10 @@ window.onload = function () {
     document.addEventListener("keyup", changeDirection);  //for movements
     // Set snake speed
     speedInterval = setInterval(update, speed);
-    setInterval(test,3000);
+    setInterval(spawnenemy,3000);
 }
 
-function test(){
+function spawnenemy(){
     placeEnemy();
 }
 
@@ -324,8 +337,11 @@ function update() {
     }
     // console.log(speed);
     // Background of a Game
-    context.fillStyle = "green";
-    context.fillRect(0, 0, board.width, board.height);
+    context.fillStyle = "black";
+    context.fillRect(0,0, board.width, board.height);
+    // context.fillRect(0,0, board.width-(board.width-(board.width-blockSize)), board.height);
+    // y.warning();
+    // placeEnemy();
     y.use();
     // Set food color and position
     // const test=new ScoreBody();
@@ -354,12 +370,11 @@ function update() {
     // setInterval(y.use(),10000000);
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
-        snaketype.push(x);//??
+        snaketype.push(x);
         x.use(speedInterval);
         placeFood();
     }
     checkUpgrade();
-    // for(let i=snaketype.length; )
     updateScore();
  
     // body of snake will grow
@@ -380,7 +395,7 @@ function update() {
         
         context.fillStyle = snaketype[i].color;
         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
-        context.fillStyle = "black";
+        context.fillStyle = "white";
         context.font = "20px Comic Sans MS"
         context.fillText(snaketype[i].level.toString(),snakeBody[i][0]+blockSize/3, snakeBody[i][1]+blockSize);
     }
@@ -396,7 +411,7 @@ function update() {
     } else if (snakeY >= total_row * blockSize) {
         snakeY = 0;
     }
- 
+    
     for (let i = 0; i < snakeBody.length; i++) {
         if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1]) {
              
@@ -404,6 +419,15 @@ function update() {
             gameOver = true;
             // alert("Game Over");
         }
+    }
+    // console.log("snakex"+snakeX)
+    // console.log("enemy"+EnemyY)
+
+    //check if snake head hit the enemy or not
+    if(snakeX ==  EnemyX){
+        gameOver = true;
+    }else if(snakeY == EnemyY){
+        gameOver = true;
     }
     
 }
@@ -467,13 +491,11 @@ function placeFood() {
     foodY = Math.floor(Math.random() * total_row) * blockSize;
     
     // context.fillRect(foodX, foodY, blockSize, blockSize);
-    context.font='20px Arial'
-
 }
 
 function placeEnemy(){
     // rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
-    rand=enemy[2];
+    rand=enemy[Math.floor(Math.random()*2)];
     console.log(rand);
     if(rand === 'areaenemy'){
         y = new AreaEnemy();
@@ -484,8 +506,9 @@ function placeEnemy(){
     }
 
     EnemyX = Math.floor(Math.random() * total_col) * blockSize;
-
     EnemyY = Math.floor(Math.random() * total_row) * blockSize;
+    // console.log(EnemyX);
+    // console.log(EnemyY);
 }
 
 function checkUpgrade(){
