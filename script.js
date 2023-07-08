@@ -15,6 +15,7 @@ var speed = 100;
 var snakeBody = [];
 var snaketype =[];
 var food=['score','generic','multiplier','shield'];
+var enemy=['areaenemy','rowenemy','columnenemy']
  
 var foodX;
 var foodY;
@@ -27,6 +28,8 @@ var score = 0;
 var bestScore = 0;
 var shield = false;
 var x;//food
+var y;//enemy
+
 var increment = 10;
 
 var speedInterval = null;
@@ -45,13 +48,13 @@ class Enemy{
         throw new Error("Property 'type' must be implemented.");
     }
 
-    // use(){
-    //     throw new Error("Upgrade not implemented")
-    // }   
+    use(){
+        throw new Error("Upgrade not implemented")
+    }   
 
-    // remove(){
-    //     return;
-    // }
+    remove(){
+        return;
+    }
 }
 
 class AreaEnemy extends Enemy{
@@ -60,7 +63,7 @@ class AreaEnemy extends Enemy{
     }
 
     get color(){
-        return "red";
+        return "black"
     }
 
     get type(){
@@ -82,7 +85,7 @@ class RowEnemy extends Enemy{
     }
 
     get color(){
-        return "red"
+        return "black"
     }
 
     get type(){
@@ -104,16 +107,17 @@ class ColumnEnemy extends Enemy{
     }
 
     get color(){
-        return "red"
+        return "black"
     }
 
     get type(){
         return "Column"
     }
 
-    // use(){
-        
-    // }
+    use(){
+        context.fillStyle=y.color;
+        context.fillRect(EnemyX, 0, blockSize, board.height);
+    }
 
     // remove(){
         
@@ -206,7 +210,7 @@ class ScoreBody extends Body{
         // const increment = Math.pow(10, this.level-1)
         // const increment = 10
         this.scoreInterval = setInterval(()=>{
-            score += increment;},1000);
+            score += increment*this._level;},1000);
         // setInterval(score++,speed);
     }
 
@@ -294,11 +298,17 @@ window.onload = function () {
     // context.fillStyle = "green";
     // context.fillRect(0, 0, board.width, board.height);   
     placeFood();
+    placeEnemy();
     document.addEventListener("keyup", changeDirection);  //for movements
     // Set snake speed
     speedInterval = setInterval(update, speed);
+    setInterval(test,3000);
 }
- 
+
+function test(){
+    placeEnemy();
+}
+
 function update() {
     if (gameOver) {
         if (score >= bestScore){
@@ -316,7 +326,7 @@ function update() {
     // Background of a Game
     context.fillStyle = "green";
     context.fillRect(0, 0, board.width, board.height);
-    
+    y.use();
     // Set food color and position
     // const test=new ScoreBody();
     // context.fillStyle = test.color;
@@ -328,13 +338,27 @@ function update() {
     //generate body
     context.fillStyle=x.color;
     context.fillRect(foodX, foodY, blockSize, blockSize);
+    
+    // context.fillStyle='white';
+    // context.Baseline='middle';
+    // context.textAlign = 'center';
+    // context.fillText(x.level,foodX+12.5,foodY+20);
+    // console.log(foodX);
+    // console.log(foodY);
+    
+    // context.fillStyle=y.color;
+    // context.fillRect(EnemyX, 0, blockSize, board.height);
+    // placeEnemy();
+    // y.use();
+    // setInterval(placeEnemy(),10000000);
+    // setInterval(y.use(),10000000);
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
-        snaketype.push(x);
+        snaketype.push(x);//??
         x.use(speedInterval);
-        checkUpgrade();
         placeFood();
     }
+    checkUpgrade();
     // for(let i=snaketype.length; )
     updateScore();
  
@@ -420,6 +444,7 @@ function updateBestScore(){
 // Randomly place food
 function placeFood() {
     rand=food[Math.floor(Math.random()*2)];// which body to generate
+    // rand='score';
     if(rand === 'score'){
        x = new ScoreBody();
     }
@@ -439,6 +464,25 @@ function placeFood() {
     foodY = Math.floor(Math.random() * total_row) * blockSize;
     
     // context.fillRect(foodX, foodY, blockSize, blockSize);
+    context.font='20px Arial'
+
+}
+
+function placeEnemy(){
+    // rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
+    rand=enemy[2];
+    console.log(rand);
+    if(rand === 'areaenemy'){
+        y = new AreaEnemy();
+    }else if(rand === 'rowenemy'){
+        y = new RowEnemy();
+    }else if(rand === 'columnenemy'){
+        y = new ColumnEnemy();
+    }
+
+    EnemyX = Math.floor(Math.random() * total_col) * blockSize;
+
+    EnemyY = Math.floor(Math.random() * total_row) * blockSize;
 }
 
 function checkUpgrade(){
