@@ -380,6 +380,9 @@ function update() {
         
         context.fillStyle = snaketype[i].color;
         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+        context.fillStyle = "black";
+        context.font = "20px Comic Sans MS"
+        context.fillText(snaketype[i].level.toString(),snakeBody[i][0]+blockSize/3, snakeBody[i][1]+blockSize);
     }
  
     if (snakeX < 0) {
@@ -492,12 +495,6 @@ function checkUpgrade(){
     first = snaketype[snaketype.length-3]
     second = snaketype[snaketype.length-2]
     last = snaketype[snaketype.length-1]
-    console.log(first.level)
-    console.log(second.level)
-    console.log(last.level)
-    console.log(first.type)
-    console.log(second.type)
-    console.log(last.type)
     if(first.type === second.type && first.level === second.level && first.type !== 'generic' && second.type !== 'generic' && last.type !== 'generic'){
         if(second.type === last.type && second.level === last.level){
             first.upgrade();
@@ -582,37 +579,3 @@ function checkUpgrade(){
     }
     return
 }
-
-// function checkUpgrade(){
-//     const newBody = [];
-//     const newBodyCoord = [];
-//     let count = 1;
-  
-//     for (let i = 1; i < snaketype.length; i++) {
-//       if ((snaketype[i].type === snaketype[i - 1].type || snaketype[i].type === 'generic' || snaketype[i-1] === 'generic') && (snaketype[i].level === snaketype[i-1].level)){
-//           count++;
-//       } 
-//       else {
-//         while (count >= 3) {
-//             console.log(snaketype[i-1])
-//             snaketype[i-1].upgrade();
-//             newBody.push(snaketype[i - 1]);
-//             newBodyCoord.push(snakeBody[i-1]);
-//             count -= 3;
-//         }
-//         count = 1;
-//       }
-//     }
-  
-//     while (count >= 3) {
-//         snaketype[snaketype.length-3].upgrade();
-//         newBody.push(snaketype[snaketype.length - 3]);
-//         newBodyCoord.push(snakeBody[snakeBody.length-3]);
-//         count -= 3;
-//     }
-//     if(newBody.length>0){
-//         snaketype = newBody;
-//         snakeBody = newBodyCoord;
-//     }
-//     return
-// }
