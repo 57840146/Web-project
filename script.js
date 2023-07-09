@@ -324,7 +324,7 @@ window.onload = function () {
     // context.fillStyle = "green";
     // context.fillRect(0, 0, board.width, board.height);   
     placeFood();
-    //placeEnemy();
+    placeEnemy();
     document.addEventListener("keyup", changeDirection);  //for movements
     // Set snake speed
     speedInterval = setInterval(update, speed);
@@ -332,7 +332,7 @@ window.onload = function () {
 }
 
 function spawnenemy(){
-    //placeEnemy();
+    placeEnemy();
 }
 
 function update() {
@@ -350,7 +350,10 @@ function update() {
     context.fillStyle = "black";
     context.fillRect(0,0, board.width, board.height);
 
-    
+
+
+
+    y.use();
     //render foods
     for (i = 0; i < foodPool.length; i++){
         var food = foodPool[i][0]
@@ -359,7 +362,6 @@ function update() {
         context.fillStyle=food.color;
         context.fillRect(foodx, foody, blockSize, blockSize);
         console.log(food)
-
     }
 
     //check snake food interaction
@@ -382,7 +384,7 @@ function update() {
         console.log("placing food")
         placeFood();
     }
-    
+
     // body of snake will grow
     for (let i = snakeBody.length - 1; i > 0; i--) {
         // it will store previous part of snake to the current part
