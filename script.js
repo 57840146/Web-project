@@ -37,7 +37,8 @@ var shield = false;
 var x;//food
 var y;//enemy
 
-var increment = 10;
+//var increment = 0;
+var multiplier = 1;
 
 var speedInterval = null;
 class Enemy{
@@ -233,11 +234,10 @@ class ScoreBody extends Body{
     }
 
     use(){
-        // const increment = Math.pow(10, this.level-1)
-        // const increment = 10
+        var increment = 10 *this._level * this._level;
+        clearInterval(this.scoreInterval);
         this.scoreInterval = setInterval(()=>{
-            score += increment*this._level;},1000);
-        // setInterval(score++,speed);
+            score += increment*multiplier;},1000);
     }
 
     remove(){
@@ -247,6 +247,7 @@ class ScoreBody extends Body{
 
     upgrade() {
         this._level++;
+        this.use();
         console.log(`Upgraded to level ${this.level}.`);
     }
 }
@@ -254,6 +255,7 @@ class ScoreBody extends Body{
 class MultiplierBody extends Body{
     constructor(){
         super();
+        this._level = 1;
     }
 
     get color(){
@@ -266,18 +268,23 @@ class MultiplierBody extends Body{
     }
 
     get level(){
-        return 1
+        return this._level;
     }
 
     use(old){
-        increment *= 2;
+        multiplier = this._level+1
         speed = 75;
         clearInterval(old);
         speedInterval = setInterval(update, speed);
     }
 
     upgrade(){
-        console.log('cant upgrade')
+        this._level++;
+        multiplier = this._level+1
+        return
+    }
+
+    remove(){
         return
     }
 }
@@ -361,7 +368,6 @@ function update() {
         var foody = foodPool[i][2]
         context.fillStyle=food.color;
         context.fillRect(foodx, foody, blockSize, blockSize);
-        console.log(food)
     }
 
     //check snake food interaction
@@ -480,7 +486,7 @@ function updateBestScore(){
  
 // Randomly place food
 function placeFood() {
-    rand=food[Math.floor(Math.random()*2)];// which body to generate
+    rand=food[Math.floor(Math.random()*4)];// which body to generate
     // rand='score';
     if(rand === 'score'){
        x = new ScoreBody();
@@ -504,7 +510,6 @@ function placeFood() {
 function placeEnemy(){
     // rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
     rand=enemy[Math.floor(Math.random()*2)];
-    console.log(rand);
     if(rand === 'areaenemy'){
         y = new AreaEnemy();
     }else if(rand === 'rowenemy'){
