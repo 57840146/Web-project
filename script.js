@@ -16,8 +16,11 @@ var snakeBody = [];
 var snaketype =[];
 var food=['score','generic','multiplier','shield'];
 var enemy=['rowenemy','columnenemy','areaenemy'];
-// var enemybody=[];
- 
+var enemybody=[];
+
+var foodpool = [];
+var enemypool = [];
+
 var foodX;
 var foodY;
 
@@ -100,6 +103,9 @@ class RowEnemy extends Enemy{
     use(){
         context.fillStyle=this.color;
         context.fillRect(0, EnemyY, board.width,blockSize);
+        for(let i=0; i<total_row;i++){
+            enemybody.push([i*25,EnemyY]);
+        }
     }
 
     // remove(){
@@ -130,12 +136,16 @@ class ColumnEnemy extends Enemy{
     use(){
         context.fillStyle=this.color;
         context.fillRect(EnemyX, 0, blockSize, board.height);
+        for(let i=0; i<total_row;i++){
+            enemybody.push([EnemyX,i*25]);
+        }
     }
 
     // remove(){
         
     // }
 }
+
 class Body {
     constructor() {
       if (new.target === Body) {
@@ -311,7 +321,7 @@ window.onload = function () {
     // context.fillStyle = "green";
     // context.fillRect(0, 0, board.width, board.height);   
     placeFood();
-    placeEnemy();
+    // placeEnemy();
     document.addEventListener("keyup", changeDirection);  //for movements
     // Set snake speed
     speedInterval = setInterval(update, speed);
@@ -376,7 +386,8 @@ function update() {
     }
     checkUpgrade();
     updateScore();
- 
+    
+
     // body of snake will grow
     for (let i = snakeBody.length - 1; i > 0; i--) {
         // it will store previous part of snake to the current part
@@ -419,15 +430,19 @@ function update() {
             gameOver = true;
             // alert("Game Over");
         }
+
     }
     // console.log("snakex"+snakeX)
     // console.log("enemy"+EnemyY)
 
     //check if snake head hit the enemy or not
-    if(snakeX ==  EnemyX){
-        gameOver = true;
-    }else if(snakeY == EnemyY){
-        gameOver = true;
+    // for(let i = 0; i<enemybody.length;i++){
+    //     if(snakeX == enemybody[i][] && snakeY == enemybody[])
+    // }
+    if(snakeX == EnemyX && y.type=="Column"){
+        gameOver=true;
+    }else if(snakeY == EnemyY && y.type=="Row"){
+        gameOver=true;
     }
     
 }
