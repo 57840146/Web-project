@@ -29,6 +29,7 @@ var enemyPool=[];
 
 var EnemyX;
 var EnemyY;
+var area;
 
 var gameOver = false;
 var score = 0;
@@ -82,9 +83,10 @@ class AreaEnemy extends Enemy{
         return "Area";
     }
 
-    // use(){
-
-    // }
+    use(){
+        context.fillStyle=this.color;
+        context.fillRect(EnemyX,EnemyY,blockSize*area,blockSize*area)
+    }
 
     // remove(){
 
@@ -444,8 +446,12 @@ function update() {
         gameOver=true;
     }else if(snakeY == EnemyY && y.type=="Row"){
         gameOver=true;
+    }else if(snakeX >= EnemyX && snakeY >= EnemyY && snakeX<EnemyX+(blockSize*area) && snakeY<EnemyY+(blockSize*area) && y.type=='Area'){
+        gameOver=true;
     }
-    
+    // console.log(EnemyX*area)
+    // console.log("x"+snakeX)
+    // console.log("y"+snakeY)
 }
  
 // Movement of the Snake - We are using addEventListener
@@ -508,8 +514,9 @@ function placeFood() {
 }
 
 function placeEnemy(){
-    // rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
-    rand=enemy[Math.floor(Math.random()*2)];
+    rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
+    // rand=enemy[Math.floor(Math.random()*2)];
+    // rand=enemy[2];
     if(rand === 'areaenemy'){
         y = new AreaEnemy();
     }else if(rand === 'rowenemy'){
@@ -520,6 +527,10 @@ function placeEnemy(){
 
     EnemyX = Math.floor(Math.random() * total_col) * blockSize;
     EnemyY = Math.floor(Math.random() * total_row) * blockSize;
+    // EnemyX=375;
+    // EnemyY=375;
+    area=Math.floor(Math.random()*20)+5;
+    // area=15;
     // console.log(EnemyX);
     // console.log(EnemyY);
 }
