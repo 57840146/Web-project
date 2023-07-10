@@ -35,7 +35,6 @@ var gameOver = false;
 var score = 0;
 var bestScore = 0;
 var shield = false;
-var invicibletime;
 var test=false;
 var flash;
 var x;//food
@@ -45,7 +44,7 @@ var y;//enemy
 var multiplier = 1;
 var nihao=0;
 var speedInterval = null;
-// var maxlevel=3;//
+var level=0;
 class Enemy{
     constructor(){
         if (new.target === Enemy) {
@@ -322,11 +321,14 @@ class ShieldBody extends Body{
         // shield = false;
         // test=true;
         if(this._level==1){
-            invicible=setInterval(invicible,3000);
+            setTimeout(invincible,1000);
+            test=true;
         }else if(this._level==2){
-            invicible=setInterval(invicible,1000);
+            setTimeout(invincible,2000);
+            test=true;
         }else{
-            invicibletime=setInterval(invicible,3000);
+            setTimeout(invincible,3000);
+            test=true;
         }
     }
 
@@ -356,42 +358,29 @@ window.onload = function () {
     // Set snake speed
     speedInterval = setInterval(update, speed);
     setInterval(spawnenemy,3000);
+    if(EnemyX == blockSize * 5|| EnemyY==blockSize * 5){
+        placeEnemy();
+    }
+    // spawnenemy();
 }
+
 
 function spawnenemy(){
     placeEnemy();
 }
 
-// function flash(){
-//     context.fillStyle = "black";
-//     snakeX += speedX * blockSize; //updating Snake position in X coordinate.
-//     snakeY += speedY * blockSize;  //updating Snake position in Y coordinate.
-//     context.fillRect(snakeX, snakeY, blockSize, blockSize);
-//     for (let i = 0; i < snakeBody.length; i++) {
-//         context.fillStyle = "black";
-//         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
-//         context.fillStyle = "black";
-//         context.font = "20px Comic Sans MS"
-//         context.fillText(snaketype[i].level.toString(),snakeBody[i][0]+blockSize/3, snakeBody[i][1]+blockSize);
-//     }
-//     // clearInterval(flash);
-// }
-
-// function flash1(){
-//     for (let i = 0; i < snakeBody.length; i++) {
-//         context.fillStyle = snakeBody[i].color;
-//         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
-//         context.fillStyle = "black";
-//         context.font = "20px Comic Sans MS"
-//         context.fillText(snaketype[i].level.toString(),snakeBody[i][0]+blockSize/3, snakeBody[i][1]+blockSize);
-//     }
-// }
-
-function invicible(){
+function invincible(){
     console.log("test");
     shield = false;
-    // test=false;
-    clearInterval(invicibletime);
+    test=false;
+}
+
+function alllevel(){
+    var a=0;
+    for(let i=0;i<snaketype.length;i++){
+        a+=snaketype[i].level;
+    }
+    return a
 }
 
 function update() {
@@ -409,25 +398,34 @@ function update() {
     context.fillStyle = "black";
     context.fillRect(0,0, board.width, board.height);
 
+    level=alllevel();
     
+    // setInterval(spawnenemy,10000-(level*100));
     for(let i=0; i<enemyPool.length; i++){
         var enemy = enemyPool[i][0];
         // console.log(enemy);
         var enemyx  = enemyPool[i][1];
         var enemyy = enemyPool[i][2];
         var enemyarea = enemyPool[i][3];
-        // console.log(enemy);
-        context.fillStyle=enemy.color;
+        // console.log(enemy.type);
+        // context.fillStyle='red';
+
         if(enemy.type=='Column'){
+            context.fillStyle='red';
             context.fillRect(enemyx, 0, blockSize, board.height);
         }else if(enemy.type=='Row'){
+            context.fillStyle='red';
             context.fillRect(0, enemyy, board.width,blockSize);
         }else if(enemy.type=='Area'){
+            context.fillStyle='red';
             context.fillRect(enemyx,enemyy,blockSize*enemyarea,blockSize*enemyarea);
         }
+
     }
-    console.log(shield);
+
+    // console.log(shield);
     for(let i=0; i<enemyPool.length; i++){
+
         var enemy = enemyPool[i][0];//type
         // console.log(enemy);
         var enemyx  = enemyPool[i][1];//x
@@ -442,10 +440,10 @@ function update() {
             if(shield==true){
                 for(let i=0;i<snaketype.length;i++){
                     if(snaketype[i].type=="shield"){
-                        // invicibletime=setInterval(invicible,3000);
                         snaketype[i].remove();
                         snakeBody.splice(i,1);
                         snaketype.splice(i,1);
+                        break;
                     }
                 }
             }else{
@@ -456,10 +454,10 @@ function update() {
             if(shield==true){
                 for(let i=0;i<snaketype.length;i++){
                     if(snaketype[i].type=="shield"){
-                        // invicibletime=setInterval(invicible,3000);
                         snaketype[i].remove();
                         snakeBody.splice(i,1);
                         snaketype.splice(i,1);
+                        break;
                     }
                 }
             }else{
@@ -467,20 +465,17 @@ function update() {
                 gameOver=true;
             }
         }else if(snakeX >= enemyx && snakeY >= enemyy && snakeX < enemyx+(blockSize*enemyarea) && snakeY < enemyy+(blockSize*enemyarea) && enemy.type=='Area'){
-            console.log("sx"+snakeX);
-            console.log("sy"+snakeY);
-            console.log("x"+enemyx);
-            console.log("y"+enemyy);
-            console.log("xarea"+(enemyx+(blockSize*enemyarea)))
-            console.log("yarea"+(enemyy+(blockSize*enemyarea)))
+            // console.log("sx"+snakeX);
+            // console.log("sy"+snakeY);
+            // console.log("x"+enemyx);
+            // console.log("y"+enemyy);
+            // console.log("xarea"+(enemyx+(blockSize*enemyarea)))
+            // console.log("yarea"+(enemyy+(blockSize*enemyarea)))
             if(shield==true){
                 for(let i=0;i<snaketype.length;i++){
                     console.log(shield);
                     if(snaketype[i].type=="shield"){
-                        // console.log(shield);
-                        // snakeBody[i].remove;
-                        // invicibletime=setInterval(invicible,3000);
-                        snaketype[i].remove();
+                        snaketype[i].remove();//delete functinality of snakebocy;
                         snakeBody.splice(i,1);
                         snaketype.splice(i,1);
                         break;
@@ -490,23 +485,78 @@ function update() {
                 console.log("died area")
                 gameOver=true;
             }
-        }
-
-        for (let i = 0; i < snakeBody.length; i++) {
-            if(snakeBody[i][0] == enemyx && enemy.type=="Column"){
-                snakeBody.splice[i,snakeBody.length];
-            }else if(snakeBody[i][1] == enemyy && enemy.type=="Row"){
-                snakeBody.splice[i,snakeBody.length];
-            }else if(snakeBody[i][0] >= enemyx && snakeBody[i][1] >= enemyy && snakeBody[i][0] < enemyx+(blockSize*enemyarea) && snakeBody[i][1] < enemyy+(blockSize*enemyarea) && enemy.type=='Area'){
-                snakeBody.splice[i,snakeBody.length];
+        }else{
+            //snakebody collabrate with enemy
+            for (let i = 0; i < snakeBody.length; i++) {
+                // console.log(i);
+                if(snakeBody[i][0] == enemyx && enemy.type=="Column"){
+                    // console.log('test1')
+                    if(shield){
+                        for (let r = 0; r < snakeBody.length; r++) {
+                            if(snaketype[r].type=='shield'){
+                                snaketype[r].remove();
+                                snakeBody.splice(r,1);
+                                snaketype.splice(r,1);
+                                break;
+                            }
+                        }
+                    }else{
+                        snakeBody.splice(i,snakeBody.length);
+                        snaketype.splice(i,snaketype.length);
+                        break;
+                    }
+                }else if(snakeBody[i][1] == enemyy && enemy.type=="Row"){
+                    // console.log('test2')
+                    if(shield){
+                        for (let r = 0; r < snakeBody.length; r++) {
+                            if(snaketype[r].type=='shield'){
+                                snaketype[r].remove();
+                                snakeBody.splice(r,1);
+                                snaketype.splice(r,1);
+                                break;
+                            }
+                        }
+                    }else{
+                        snakeBody.splice(i,snakeBody.length);
+                        snaketype.splice(i,snaketype.length);
+                        break;
+                    }
+                }else if(snakeBody[i][0] >= enemyx && snakeBody[i][1] >= enemyy && snakeBody[i][0] < enemyx+(blockSize*enemyarea) && snakeBody[i][1] < enemyy+(blockSize*enemyarea) && enemy.type=='Area'){
+                    // console.log('test3')
+                    if(shield){
+                        for (let r = 0; r < snakeBody.length; r++) {
+                            if(snaketype[r].type=='shield'){
+                                snaketype[r].remove();
+                                snakeBody.splice(r,1);
+                                snaketype.splice(r,1);
+                                break;
+                            }
+                        }
+                    }else{
+                        snakeBody.splice(i,snakeBody.length);
+                        snaketype.splice(i,snaketype.length);
+                        break;
+                    }
+                }
             }
         }
+
+        // enemyPool.splice(0,1);
         // console.log(enemyPool.length);
+        // setTimeout(() => {
+        //     enemyPool.splice(0,1);
+        // }, 1000);
+        if(enemyPool.length>Math.floor(level/10)){//number of enemies
+            setTimeout(() => {
+                enemyPool.splice(0,1);
+            }, 1000);
+        }
     }
-    
-    for(let i=0; i<snaketype.length;i++){
-        if(snaketype[i]=='shield'){
+    //keep check if snake have shield body or not
+    for(let i=0; i<snakeBody.length;i++){
+        if(snaketype[i].type==='shield'){
             shield=true;
+            break;
         }
     }
 
@@ -521,12 +571,12 @@ function update() {
             history.back();
         }
     }
-    if(enemyPool.length>2){
-        enemyPool.splice(0,2);
+    console.log(Math.floor(level/10))
+    if(enemyPool.length>Math.floor(level/10)){//number of enemies
+        setTimeout(() => {
+            enemyPool.splice(0,1);
+        }, 1000);
     }
-    // }else if(enemyPool.length<2){
-    //     placeEnemy();
-    // }
     // console.log("length"+enemyPool.length)
     
     //render foods
@@ -550,12 +600,12 @@ function update() {
             foodPool.splice(i,1)
         }
     }
+
     checkUpgrade();
     updateScore();
     
     //place food here
-    while (foodPool.length < 3){
-        // console.log("placing food")
+    while (foodPool.length < 5){//number of foods
         placeFood();
     }
 
@@ -573,8 +623,22 @@ function update() {
     snakeY += speedY * blockSize;  //updating Snake position in Y coordinate.
     context.fillRect(snakeX, snakeY, blockSize, blockSize);
 
+    //display snake
     for (let i = 0; i < snakeBody.length; i++) {
-        
+        //invincible visual effects
+        // if(test){
+        //     setTimeout(() => {
+        //         context.fillStyle='black';
+        //         context.fillRect(snakeX, snakeY, blockSize, blockSize);
+        //         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+        //     }, 200);
+        //     setTimeout(() => {
+        //         context.fillStyle='black';
+        //         context.fillRect(snakeX, snakeY, blockSize, blockSize);
+        //         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+        //     }, 400);
+        // }
+
         context.fillStyle = snaketype[i].color;
         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
         context.fillStyle = "black";
@@ -603,51 +667,6 @@ function update() {
         }
 
     }
-
-    //check if snake head hit the enemy or not
-    // for(let i = 0; i<enemybody.length;i++){
-    //     if(snakeX == enemybody[i][] && snakeY == enemybody[])
-    // }
-    // if(snakeX == EnemyX && y.type=="Column"){
-    //     if(shield==true){
-    //         for(let i=0;i<snaketype.length;i++){
-    //             if(snaketype[i].type=="shield"){
-    //                 snakeBody[i].remove();
-    //                 snakeBody.splice(i,1);
-    //             }
-    //         }
-    //     }else{
-    //         gameOver=true;
-    //     }
-    // }else if(snakeY == EnemyY && y.type=="Row"){
-    //     if(shield==true){
-    //         for(let i=0;i<snaketype.length;i++){
-    //             if(snaketype[i].type=="shield"){
-    //                 snakeBody[i].remove();
-    //                 snakeBody.splice(i,1);
-    //             }
-    //         }
-    //     }else{
-    //         gameOver=true;
-    //     }
-    // }else if(snakeX >= EnemyX && snakeY >= EnemyY && snakeX<EnemyX+(blockSize*area) && snakeY<EnemyY+(blockSize*area) && y.type=='Area'){
-    //     if(shield==true){
-    //         for(let i=0;i<snaketype.length;i++){
-    //             console.log(shield);
-    //             if(snaketype[i].type=="shield"){
-    //                 // console.log(shield);
-    //                 // snakeBody[i].remove;
-    //                 invicibletime=setInterval(invicible,3000);
-    //                 snakeBody.splice(i,1);
-    //             }
-    //         }
-    //     }else{
-    //         gameOver=true;
-    //     }
-    // }
-    // console.log(EnemyX*area)
-    // console.log("x"+snakeX)
-    // console.log("y"+snakeY)
 }
  
 // Movement of the Snake - We are using addEventListener
@@ -688,8 +707,8 @@ function updateBestScore(){
  
 // Randomly place food
 function placeFood() {
-    // rand=food[Math.floor(Math.random()*2)+2];// which body to generate
-    rand='shield';
+    rand=food[Math.floor(Math.random()*4)];// which body to generate
+    // rand='shield';
     if(rand === 'score'){
        x = new ScoreBody();
     }
@@ -709,17 +728,21 @@ function placeFood() {
     foodPool.push([x,foodX,foodY])
 }
 
+
 function placeEnemy(){
 
     EnemyX = Math.floor(Math.random() * total_col) * blockSize;
     EnemyY = Math.floor(Math.random() * total_row) * blockSize;
     area = Math.floor(Math.random()*15)+5;
-    // nihao++;
+    // // nihao++;
     // console.log(nihao);
     rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
-    rand=enemy[Math.floor(Math.random()*2)];
-    // rand=enemy[2];
-    context.fillStyle='white';
+    // rand=enemy[Math.floor(Math.random()*2)];
+    // rand=enemy[1];
+    // EnemyX=350;
+    // EnemyY=450;
+    // area=15;
+    context.fillStyle='purple';
     if(rand === 'areaenemy'){
         y = new AreaEnemy();
         context.fillRect(EnemyX,EnemyY,blockSize*area,blockSize*area);
@@ -730,12 +753,33 @@ function placeEnemy(){
         y = new ColumnEnemy();
         context.fillRect(EnemyX, 0, blockSize, board.height);
     }
-    // EnemyX=350;
-    // EnemyY=450;
-    // area=15;
+    setTimeout(() => {context.fillStyle='purple';
+    if(rand === 'areaenemy'){
+        y = new AreaEnemy();
+        context.fillRect(EnemyX,EnemyY,blockSize*area,blockSize*area);
+    }else if(rand === 'rowenemy'){
+        y = new RowEnemy();
+        context.fillRect(0, EnemyY, board.width,blockSize);
+    }else if(rand === 'columnenemy'){
+        y = new ColumnEnemy();
+        context.fillRect(EnemyX, 0, blockSize, board.height);
+    }}, 200);
+    setTimeout(()=>{context.fillStyle='purple';
+    if(rand === 'areaenemy'){
+        y = new AreaEnemy();
+        context.fillRect(EnemyX,EnemyY,blockSize*area,blockSize*area);
+    }else if(rand === 'rowenemy'){
+        y = new RowEnemy();
+        context.fillRect(0, EnemyY, board.width,blockSize);
+    }else if(rand === 'columnenemy'){
+        y = new ColumnEnemy();
+        context.fillRect(EnemyX, 0, blockSize, board.height);
+    }},400)
+    
     // console.log(EnemyX);
     // console.log(EnemyY);
-
+    // console.log(y,+" "+EnemyX+" "+EnemyY+" "+area)
+    // enemyPool.push([y,EnemyX,EnemyY,area]);
     setTimeout(()=>{enemyPool.push([y,EnemyX,EnemyY,area])},1000)
 }
 
