@@ -422,17 +422,18 @@ function update() {
             context.fillRect(enemyx, 0, blockSize, board.height);
         }else if(enemy.type=='Row'){
             context.fillRect(0, enemyy, board.width,blockSize);
-        }else{
+        }else if(enemy.type=='Area'){
             context.fillRect(enemyx,enemyy,blockSize*enemyarea,blockSize*enemyarea);
         }
     }
     console.log(shield);
     for(let i=0; i<enemyPool.length; i++){
-        var enemy = enemyPool[i][0];
+        var enemy = enemyPool[i][0];//type
         // console.log(enemy);
-        var enemyx  = enemyPool[i][1];
-        var enemyy = enemyPool[i][2];
-        var enemyarea = enemyPool[i][3];
+        var enemyx  = enemyPool[i][1];//x
+        var enemyy = enemyPool[i][2];//y
+        var enemyarea = enemyPool[i][3];//area
+        // console.log(enemyarea);
         // console.log("sx"+snakeX);
         // console.log("sy"+snakeY);
         // console.log("x"+enemyx);
@@ -503,7 +504,7 @@ function update() {
         // console.log(enemyPool.length);
     }
     
-    for(let i=0; i<snaketype;i++){
+    for(let i=0; i<snaketype.length;i++){
         if(snaketype[i]=='shield'){
             shield=true;
         }
