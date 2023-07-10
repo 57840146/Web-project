@@ -35,6 +35,7 @@ var gameOver = false;
 var score = 0;
 var bestScore = 0;
 var shield = false;
+var invicibletime;
 var x;//food
 var y;//enemy
 
@@ -109,9 +110,9 @@ class RowEnemy extends Enemy{
     use(){
         context.fillStyle=this.color;
         context.fillRect(0, EnemyY, board.width,blockSize);
-        for(let i=0; i<total_row;i++){
-            enemybody.push([i*25,EnemyY]);
-        }
+        // for(let i=0; i<total_row;i++){
+        //     enemybody.push([i*25,EnemyY]);
+        // }
     }
 
     // remove(){
@@ -142,9 +143,9 @@ class ColumnEnemy extends Enemy{
     use(){
         context.fillStyle=this.color;
         context.fillRect(EnemyX, 0, blockSize, board.height);
-        for(let i=0; i<total_row;i++){
-            enemybody.push([EnemyX,i*25]);
-        }
+        // for(let i=0; i<total_row;i++){
+        //     enemybody.push([EnemyX,i*25]);
+        // }
     }
 
     // remove(){
@@ -344,6 +345,10 @@ function spawnenemy(){
     placeEnemy();
 }
 
+function invicible(){
+    shield = false;
+    clearInterval(invicibletime);
+}
 function update() {
     if (gameOver) {
         if (score >= bestScore){
@@ -411,7 +416,7 @@ function update() {
         
         context.fillStyle = snaketype[i].color;
         context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
-        context.fillStyle = "white";
+        context.fillStyle = "black";
         context.font = "20px Comic Sans MS"
         context.fillText(snaketype[i].level.toString(),snakeBody[i][0]+blockSize/3, snakeBody[i][1]+blockSize);
     }
@@ -443,11 +448,41 @@ function update() {
     //     if(snakeX == enemybody[i][] && snakeY == enemybody[])
     // }
     if(snakeX == EnemyX && y.type=="Column"){
-        gameOver=true;
+        if(shield==true){
+            for(let i=0;i<snaketype.length;i++){
+                if(snaketype[i].type=="shield"){
+                    snakeBody[i].remove();
+                    snakeBody.splice(i,1);
+                }
+            }
+        }else{
+            gameOver=true;
+        }
     }else if(snakeY == EnemyY && y.type=="Row"){
-        gameOver=true;
+        if(shield==true){
+            for(let i=0;i<snaketype.length;i++){
+                if(snaketype[i].type=="shield"){
+                    snakeBody[i].remove();
+                    snakeBody.splice(i,1);
+                }
+            }
+        }else{
+            gameOver=true;
+        }
     }else if(snakeX >= EnemyX && snakeY >= EnemyY && snakeX<EnemyX+(blockSize*area) && snakeY<EnemyY+(blockSize*area) && y.type=='Area'){
-        gameOver=true;
+        if(shield==true){
+            for(let i=0;i<snaketype.length;i++){
+                console.log(shield);
+                if(snaketype[i].type=="shield"){
+                    // console.log(shield);
+                    // snakeBody[i].remove;
+                    invicibletime=setInterval(invicible,3000);
+                    snakeBody.splice(i,1);
+                }
+            }
+        }else{
+            gameOver=true;
+        }
     }
     // console.log(EnemyX*area)
     // console.log("x"+snakeX)
@@ -529,10 +564,11 @@ function placeEnemy(){
     EnemyY = Math.floor(Math.random() * total_row) * blockSize;
     // EnemyX=375;
     // EnemyY=375;
-    area=Math.floor(Math.random()*20)+5;
+    area=Math.floor(Math.random()*15)+5;
     // area=15;
     // console.log(EnemyX);
     // console.log(EnemyY);
+    enemyPool.push([y,EnemyX,EnemyY])
 }
 
 function checkUpgrade(){
