@@ -710,28 +710,33 @@ function placeFood() {
 }
 
 function placeEnemy(){
-    // nihao++;
-    // console.log(nihao);
-    // rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
-    // rand=enemy[Math.floor(Math.random()*2)];
-    rand=enemy[2];
-    if(rand === 'areaenemy'){
-        y = new AreaEnemy();
-    }else if(rand === 'rowenemy'){
-        y = new RowEnemy();
-    }else if(rand === 'columnenemy'){
-        y = new ColumnEnemy();
-    }
 
     EnemyX = Math.floor(Math.random() * total_col) * blockSize;
     EnemyY = Math.floor(Math.random() * total_row) * blockSize;
+    area = Math.floor(Math.random()*15)+5;
+    // nihao++;
+    // console.log(nihao);
+    rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
+    rand=enemy[Math.floor(Math.random()*2)];
+    // rand=enemy[2];
+    context.fillStyle='white';
+    if(rand === 'areaenemy'){
+        y = new AreaEnemy();
+        context.fillRect(EnemyX,EnemyY,blockSize*area,blockSize*area);
+    }else if(rand === 'rowenemy'){
+        y = new RowEnemy();
+        context.fillRect(0, EnemyY, board.width,blockSize);
+    }else if(rand === 'columnenemy'){
+        y = new ColumnEnemy();
+        context.fillRect(EnemyX, 0, blockSize, board.height);
+    }
     // EnemyX=350;
     // EnemyY=450;
-    area = Math.floor(Math.random()*15)+5;
     // area=15;
     // console.log(EnemyX);
     // console.log(EnemyY);
-    enemyPool.push([y,EnemyX,EnemyY,area])
+
+    setTimeout(()=>{enemyPool.push([y,EnemyX,EnemyY,area])},1000)
 }
 
 function checkUpgrade(){
