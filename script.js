@@ -507,10 +507,10 @@ function update() {
             updateBestScore();
         }
         let restart = window.confirm("Game over!");//back to starting page
-        if(restart){
+        // if(restart){
             // history.back();//local use
             window.location.href = "https://57840146.github.io/Web-project/Starting_Page.html";
-        }
+        // }
     }
     
     //render foods
