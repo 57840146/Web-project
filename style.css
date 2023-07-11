@@ -15,6 +15,8 @@ body {
 }
 
 .button{
+    width: 200px; /* adjust as needed */
+    height: 100px; /* adjust as needed */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,8 +25,9 @@ body {
     box-shadow: 0 9px #999;
     color: black;
     border: 2px solid green;
-    font-size: 50px;
+    font-size: 60px;
 }
+
 .button:hover{
     background-color: green;
     color: white;
@@ -34,6 +37,11 @@ body {
     box-shadow: 0 5px #666;
     transform: translateY(4px);
 }
+
+.button-container {
+    margin-bottom: 100px;
+}
+
 #bestScore {
     font-size: 24px;
     font-family: "Comic Sans MS", cursive;

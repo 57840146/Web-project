@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="Tutorialstyle.css">
+    <title>Page Switch</title>
+</head>
+<body>
+    <div id="page1" class="page">
+        <a href="Starting_Page.html" style="text-decoration: none"><!--get rid of underline-->
+            <button class="button top-left center">←back</button>
+        </a>
+        <div class="content">Try to avoid enemies, survive and get more bodies to strive for the highest score</div>
+        <div class="arrow" onclick="changePage(2)">&gt;</div>
+    </div>
+
+    <div id="page2" class="page" style="display: none;">
+        <div class="arrow" onclick="changePage(1)">&lt;</div>
+        <div class="content">There are three types of enemies: column,row,area. The number of enemies will increaseing based on your snakebodys level sum.</div>
+        <div class="arrow" onclick="changePage(3)">&gt;</div>
+    </div>
+    
+    <div id="page3" class="page" style="display: none;">
+        <div class="arrow" onclick="changePage(2)">&lt;</div>
+        <table class="content">
+            <tr>
+                <td>Three same type and same level bodies will upgrade to higher level bodies</td><td>Level1</td><td>Level2</td><td>Level3</td><td>LevelN</td>
+            </tr>
+            <tr>
+                <td class="score-cell">Score(Score will be added per second based on the level)</td><td>+10/s</td><td>+40/s</td><td>+90/s</td><td>10*N*N/s</td>
+            </tr>
+            <tr>
+                <td class="generic-cell">Generic(Can be combined with any block of the same level)</td><td>Can combined with any level1 block</td><td>Can combined with any level2 block</td><td>Can combined with any level3 block</td><td>Can combined with any levelN block</td>
+            </tr>
+            <tr>
+                <td class="multiplier-cell">Multiplier(Game speed will x1.5 and increasing all Scoreblocks score per second base on the level)</td><td>Scoreblock scorex2</td><td>Scoreblock scorex3</td><td>Scoreblock scorex4</td><td>Scoreblock scorexN</td>
+            </tr>
+            <tr>
+                <td class="shield-cell">Shield(Block damage once caused by a collision with an enemy, when Shieldblocks used snake will get invincibility time, invincibility time will increasing based on level,Max Level 3)</td><td>invincibility time 0s</td><td>nvincibility time 1s</td><td>nvincibility time 3s</td><td>None</td>
+            </tr>
+        </table>
+        <a href="Game.html" style="text-decoration: none"><!--get rid of underline-->
+            <button class="button top-right center">Play→</button>
+        </a>
+    </div>
+
+    <script src="Tutorialscript.js"></script>
+</body>
+</html>
