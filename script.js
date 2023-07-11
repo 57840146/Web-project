@@ -692,7 +692,7 @@ function placeEnemy(){
 
     EnemyX = Math.floor(Math.random() * total_col) * blockSize;
     EnemyY = Math.floor(Math.random() * total_row) * blockSize;
-    area = Math.floor(Math.random()*15)+5;
+    area = Math.floor(Math.random()*10)+5;//area size
     rand=enemy[Math.floor(Math.random()*3)];// which enemy to generate
     // rand=enemy[Math.floor(Math.random()*2)];
     // rand=enemy[1];
