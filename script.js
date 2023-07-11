@@ -10,7 +10,7 @@ var snakeY = blockSize * 5;
 // Set the total number of rows and columns
 var speedX = 0;  //speed of snake in x coordinate.
 var speedY = 0;  //speed of snake in Y coordinate.
-var speed = 100;
+var speed = 150;
  
 var snakeBody = [];
 var snaketype =[];
@@ -238,7 +238,7 @@ class MultiplierBody extends Body{
 
     use(old){
         multiplier = this._level+1
-        speed = 75;
+        speed = 100;
         clearInterval(old);
         speedInterval = setInterval(update, speed);
     }
