@@ -489,7 +489,7 @@ function update() {
         if(enemyPool.length>Math.floor(level/10)){//number of enemies
             setTimeout(() => {
                 enemyPool.splice(0,1);
-            }, 100);
+            }, 300);
         }
     }
     //keep check if snake have shield body or not
