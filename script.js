@@ -10,7 +10,7 @@ var snakeY = blockSize * 5;
 // Set the total number of rows and columns
 var speedX = 0;  //speed of snake in x coordinate.
 var speedY = 0;  //speed of snake in Y coordinate.
-var speed = 150;
+var speed = 100;
  
 var snakeBody = [];
 var snaketype =[];
@@ -238,9 +238,9 @@ class MultiplierBody extends Body{
 
     use(old){
         multiplier = this._level+1
-        speed = 100;
-        clearInterval(old);
-        speedInterval = setInterval(update, speed);
+        // speed = 100;
+        // clearInterval(old);
+        // speedInterval = setInterval(update, speed);
     }
 
     upgrade(){
@@ -489,7 +489,7 @@ function update() {
         if(enemyPool.length>Math.floor(level/10)){//number of enemies
             setTimeout(() => {
                 enemyPool.splice(0,1);
-            }, 1000);
+            }, 100);
         }
     }
     //keep check if snake have shield body or not
@@ -571,11 +571,11 @@ function update() {
                 context.fillRect(snakeX, snakeY, blockSize, blockSize);
                 context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
             }, 400);
-            setTimeout(() => {
-                context.fillStyle='black';
-                context.fillRect(snakeX, snakeY, blockSize, blockSize);
-                context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
-            }, 600);
+            // setTimeout(() => {
+            //     context.fillStyle='black';
+            //     context.fillRect(snakeX, snakeY, blockSize, blockSize);
+            //     context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+            // }, 600);
 
         }
 
@@ -699,6 +699,7 @@ function placeEnemy(){
     // EnemyX=350;
     // EnemyY=450;
     // area=15;
+    //warning
     context.fillStyle='purple';
     if(rand === 'areaenemy'){
         y = new AreaEnemy();
